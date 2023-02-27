@@ -1,0 +1,87 @@
+@import "../../../styles/common.scss";
+
+.container {
+  position: relative;
+  width: 100%;
+  background: transparent !important;
+  border-radius: 5px;
+  padding: 7px 1rem;
+  height: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+
+  .header {
+    position: absolute;
+    margin: 0 !important;
+    z-index: 10;
+    transition: all 0.2s ease-in-out;
+    transform: translateY(0rem);
+
+    p {
+      font-size: 0.75rem;
+      transition: all 0.2s ease-in-out;
+    }
+  }
+
+  .header_active {
+    text-align: left;
+    width: max-content;
+    padding: 0.05rem 0.5rem;
+    transform: translate(-0.8rem, -1rem);
+    p {
+      font-size: 0.7rem;
+    }
+  }
+
+  .text_input {
+    position: relative;
+    background: transparent !important;
+    border: none !important;
+    overflow-y: scroll;
+    resize: none;
+    outline: none;
+    height: 40px;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 500;
+    color: $black;
+    transition: all 0.2s ease-in-out;
+    margin: 0;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .default {
+    font-size: 1rem;
+  }
+
+  .password {
+    font-size: 2rem;
+  }
+
+  .input_active {
+    margin: 0.75rem 0rem 0rem;
+  }
+
+  .input_inactive {
+    margin: 0rem;
+  }
+
+  .email_body {
+    position: absolute;
+    bottom: -1.2rem;
+    left: 0.5rem;
+  }
+}
+
+.error {
+  border: 1px solid $problem;
+}
+
+.default_container {
+  border: 1px solid $borderColor;
+}

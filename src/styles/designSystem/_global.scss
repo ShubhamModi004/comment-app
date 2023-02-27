@@ -1,0 +1,234 @@
+@import "./colors";
+@import "./sizes";
+
+.page_layout {
+  padding: 4rem 10% 6rem 10%;
+  @media screen and (max-width: $small) {
+    padding: 4rem 6% 6rem 6%;
+  }
+}
+
+
+h1 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: $black;
+  margin: 0;
+}
+
+h2 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: $black;
+  margin: 0;
+}
+
+h3 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: $black;
+  margin: 0;
+}
+
+h4 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: $black;
+  margin: 0;
+}
+
+.text_large {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 3.45rem;
+  color: $black;
+  margin: 0;
+}
+
+
+
+.subtitle1 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: $black;
+  margin: 0;
+}
+
+.subtitle2 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: $black;
+  margin: 0;
+}
+
+p {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  color: $black;
+}
+
+
+.floatRight {
+  float: right;
+}
+
+.floatLeft {
+  float: left;
+}
+
+.hint {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: $black;
+  margin: 0;
+}
+
+.white {
+  color: white;
+}
+
+.g50 {
+  color: $g50;
+}
+
+.g400 {
+  color: $g400;
+}
+
+.g800 {
+  color: $g800;
+}
+
+.primary {
+  color: $primary;
+}
+
+.primaryLight {
+  color: $primaryLight;
+}
+
+.black {
+  color: $black;
+}
+
+.white {
+  color: $white;
+}
+
+.background {
+  color: $background;
+}
+
+
+.pending {
+  background-color: $pending;
+}
+
+.done {
+  background-color: $done;
+}
+
+.doneLight {
+  background-color: $doneLight;
+}
+
+.problem {
+  color: $problem;
+}
+
+.problemLight {
+  background-color: $problemLight;
+}
+
+
+.centerAlign {
+  text-align: center;
+}
+
+.mv1 {
+  margin: 1rem 0;
+}
+
+.mv2 {
+  margin: 2rem 0;
+}
+
+.mr1 {
+  margin-right: 1rem;
+}
+
+
+
+.mr2 {
+  margin-right: 2rem;
+}
+
+.mr5 {
+  margin-right: 5px;
+}
+
+
+.ml1 {
+  margin-left: 1rem;
+}
+
+.ml2 {
+  margin-left: 2rem;
+}
+
+.ml3 {
+  margin-left: 3px;
+}
+
+.mt1 {
+  margin-top: 1rem;
+}
+
+.mt2 {
+  margin-top: 2rem;
+}
+
+.mb1 {
+  margin-bottom: 1rem;
+}
+
+.mb2 {
+  margin-bottom: 2rem;
+}
+
+
+// rows and columns
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+.pointer {
+  cursor: pointer;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+@mixin row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+} 
+
+@mixin center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

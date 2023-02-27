@@ -1,0 +1,46 @@
+@import "../../../styles/common.scss";
+
+.form {
+  min-width: 34rem;
+  min-height: 46rem;
+  background-color: rgba($color: $white, $alpha: 0.4);
+  padding: 2rem 1.7rem;
+  border-radius: 1rem;
+  position: relative;
+
+  @media screen and (max-width: $medium) {
+    min-width: 95%;
+  }
+
+  .header_section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &_left {
+      display: flex;
+      align-items: center;
+
+      h1 {
+        margin-left: 0.3rem;
+      }
+    }
+
+    &_right {
+      display: flex;
+      align-items: center;
+      width: 9rem;
+      margin-top: 1.5rem;
+      text-align: right;
+    }
+  }
+
+  .button_container {
+    position: absolute;
+    left: 1.7rem;
+    right: 1.7rem;
+    width: auto;
+    bottom: 1rem;
+  }
+
+}

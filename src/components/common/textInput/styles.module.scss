@@ -1,0 +1,59 @@
+@import "../../../styles/common.scss";
+
+.container {
+  position: relative;
+  width: 100%;
+  background: $white;
+  box-shadow: inset 0px 1px 0px $g400;
+  border: 1px solid $g400 !important;
+  border-radius: 5px;
+  padding: 7px 1rem;
+  min-height: 3.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+
+  .text_input {
+    position: relative;
+    background: transparent !important;
+    border: none !important;
+    overflow-y: scroll;
+    resize: none;
+    outline: none;
+    font-size: 0.875rem;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 500;
+    color: $black;
+    transition: all 0.2s ease-in-out;
+    margin: 0;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+
+  }
+
+  .button_container {
+    @include center;
+    position: absolute;
+    bottom: 0.5rem;
+    right: 1rem;
+
+    div {
+      margin-top: -0.5rem;
+    }
+
+    img {
+      width: 1.1rem;
+    }
+  }
+}

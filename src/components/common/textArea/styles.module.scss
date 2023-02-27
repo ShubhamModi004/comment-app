@@ -1,0 +1,49 @@
+@import "../../../styles/common.scss";
+
+
+.container {
+  position: relative;
+  width: 100%;
+  border: none;
+
+  .text_area {
+    position: relative;
+    background: transparent !important;
+    border: none !important;
+    overflow-y: scroll;
+    resize: none;
+    outline: none;
+    min-height: 5rem;
+    max-height: 10rem;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 0.875rem;
+    color: $black;
+    transition: all 0.2s ease-in-out;
+    margin: 0;
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  .actions {
+    @include row;
+    div {
+      width: 1rem;
+      margin: 0.2rem 0.5rem;
+      cursor: pointer;
+      img {
+        width: 1rem;
+      }
+    }
+  }
+}
+
+

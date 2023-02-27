@@ -1,0 +1,49 @@
+@import '../../styles/common.scss';
+
+.comment_section {
+  height: 100vh;
+  background-color: $primaryLight;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .container {
+    width: 40rem;
+    height: 90vh;
+    background-color: $background;
+    padding: 2rem 2rem 10rem 2rem;
+    margin-top: 4rem;
+    border-radius: 1rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow: scroll;
+    -ms-overflow-style: none;  
+    scrollbar-width: none; 
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+
+    @media screen and (max-width: $medium) {
+      width: 100%;
+      border-radius: 0rem;
+      height: 100vh;
+      padding: 0.5rem 0.5rem 0.50rem 0.5rem;
+    }
+
+    
+  }
+  .input_section {
+    position: absolute;
+    bottom: 3vh;
+    width: 40rem;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    @media screen and (max-width: $medium) {
+      width: 100%;
+      bottom: 0vh;
+    }
+  }
+}

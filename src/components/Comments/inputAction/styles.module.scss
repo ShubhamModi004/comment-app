@@ -1,0 +1,26 @@
+@import "../../../styles/common.scss";
+
+.input_section {
+  background-color: $white;
+  width: 100%;
+  transition: ease-in-out;
+  @include center;
+  border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  &_container {
+    display: flex;
+    width: 100%;
+    max-width: 40rem;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      margin: 0 1rem;
+    }
+
+    @media screen and (max-width: $medium) {
+      min-width: 95%;
+    }
+  }
+}
