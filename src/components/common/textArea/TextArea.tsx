@@ -27,14 +27,13 @@ const TextArea: React.FC<Props> = ({
   ...props
 }: Props) => {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
-  const [value, setValue] = useState<string | number>("");
   const [focused, setFocused] = useState<boolean>(false);
 
   const rows = Math.ceil(maxCharacters / 100);
 
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
-      setValue(e.target.value);
+
       handleChange(e);
     },
     [handleChange]

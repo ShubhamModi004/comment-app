@@ -1,0 +1,59 @@
+@import "../../../styles/common.scss";
+
+.avatar_wrapper {
+    width: 164px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    margin: 0 auto;
+    height: 127px !important;
+  }
+  .avatar_loading {
+    width: 127px;
+    height: 127px;
+    background-color: $g400;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .avatar {
+    height: 164px !important;
+    width: 164px !important;
+    background-color: $g100;
+  }
+  .avatar_top {
+    position: absolute;
+    z-index: 10;
+    object-fit: contain;
+    color: transparent;
+    background-image: url('../../../assets/images/camera.png');
+    background-repeat: no-repeat;
+    bottom: -5px;
+    left: 15px;
+    height: 3rem;
+    width: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-size: contain;
+  }
+  .avatar_icon_verification {
+    position: absolute;
+    z-index: 10;
+    top: 10px;
+    right: 10px;
+    height: 4rem;
+    width: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  ::-webkit-file-upload-button {
+    display: none;
+  }

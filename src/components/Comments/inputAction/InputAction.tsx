@@ -1,9 +1,7 @@
 import React from "react";
 
 // components
-import Button, { ButtonSize } from "../../common/button";
 import TextInput from "../../common/textInput";
-import Spinner from "../../common/spinner";
 
 // styles
 import styles from "./styles.module.scss";

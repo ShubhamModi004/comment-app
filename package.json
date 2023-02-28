@@ -2,7 +2,7 @@
   "name": "comment",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://ShubhamModi004.github.io/comment-app/",
+  "homepage": ".",
   "dependencies": {
     "@react-spring/core": "9.3.1",
     "@react-spring/three": "9.3.1",
@@ -33,7 +33,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "yarn build",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {

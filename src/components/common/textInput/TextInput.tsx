@@ -23,13 +23,11 @@ const TextInput: React.FC<Props> = ({
   ...props
 }: Props) => {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
-  const [value, setValue] = useState<string>("");
-  const [focused, setFocused] = useState<boolean>(false);
   const [hovered, setHovered] = useState<boolean>(false);
 
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
-      setValue(e.target.value);
+
       handleChange(e);
     },
     [handleChange]
@@ -64,12 +62,6 @@ const TextInput: React.FC<Props> = ({
         className={classNames(styles["text_input"])}
         placeholder={"Start typing ..."}
         onChange={onChange}
-        onFocus={() => {
-          setFocused(true);
-        }}
-        onBlur={() => {
-          setFocused(false);
-        }}
         {...props}
       />
       <div

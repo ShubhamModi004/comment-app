@@ -9,6 +9,7 @@ import { useSpring, animated } from "@react-spring/web";
 import { Type } from "../../../database/user";
 import Input, { InputType } from "../../common/input";
 import Button from "../../common/button";
+import ImageUploader from "../../common/profileImage/profileImage";
 
 // types
 export type FormData = {
@@ -16,6 +17,7 @@ export type FormData = {
   password: string;
   confirmPassword: string;
   profileImage: string;
+  name: string;
 };
 
 export interface Props {
@@ -24,6 +26,8 @@ export interface Props {
   formData: FormData;
   loginForm: Type;
   setLoginForm: (loginForm: Type) => void;
+  handleOnImageChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  image?: File | undefined | ArrayBuffer | null | string;
 }
 
 const LoginForm = ({
@@ -32,6 +36,8 @@ const LoginForm = ({
   formData,
   loginForm,
   setLoginForm,
+  handleOnImageChange,
+  image
 }: Props): JSX.Element => {
   const textLoginAnimation = useSpring({
     opacity: loginForm === Type["LOGIN"] ? 1 : 0,
@@ -48,6 +54,7 @@ const LoginForm = ({
   });
 
   // verification
+  const [name, setName] = useState<string>("");
   const [emailVerified, setEmailVerified] = useState<string>("");
   const [passwordVerified, setPasswordVerified] = useState<string>("");
   const [confirmPasswordVerified, setConfirmPasswordVerified] =
@@ -59,6 +66,13 @@ const LoginForm = ({
       ? setEmailVerified("")
       : setEmailVerified("Enter a valid email address");
   }, [formData?.email]);
+
+  useEffect(() => {
+
+    return formData?.name !== ''
+      ? setName("")
+      : setName("Enter name");
+  }, [formData?.name]);
 
   useEffect(() => {
     if (formData?.password?.length > 5) {
@@ -138,18 +152,29 @@ const LoginForm = ({
           <animated.span style={textLoginAnimation}>Sign In</animated.span>
           <animated.span style={textSignUpAnimation}>Sign Up</animated.span>
         </h1>
-
-        <p className={classNames(styles.subtitle1, styles.mt2)}>
-          Enter your email
-        </p>
       </>
     );
   }, [loginForm, setLoginForm, textLoginAnimation, textSignUpAnimation]);
 
+
+
   const inputSection = useCallback(() => {
     return (
       <div className={styles.mv1}>
-        <div className={styles.mv2}>
+        <animated.div style={textSignUpAnimation} className={styles.mv2}>
+          <ImageUploader imageUploading={false}
+            imageUrl={image} handleOnImageChange={handleOnImageChange} />
+        </animated.div>
+        <animated.div style={textSignUpAnimation} className={styles.mv2}>
+          <Input
+            errorString={name}
+            label="Name"
+            handleChange={handleChange}
+            inputType={InputType['DEFAULT']}
+            name="name"
+          />
+        </animated.div>
+        <animated.div style={loginForm === Type.LOGIN ? textLoginAnimation : textSignUpAnimation} className={styles.mv2}>
           <Input
             errorString={emailVerified}
             label="Email"
@@ -157,8 +182,8 @@ const LoginForm = ({
             inputType={InputType["EMAIL"]}
             name="email"
           />
-        </div>
-        <div className={styles.mv2}>
+        </animated.div>
+        <animated.div style={loginForm === Type.LOGIN ? textLoginAnimation : textSignUpAnimation} className={styles.mv2}>
           <Input
             errorString={passwordVerified}
             label="Password"
@@ -166,7 +191,7 @@ const LoginForm = ({
             inputType={InputType["PASSWORD"]}
             name="password"
           />
-        </div>
+        </animated.div>
         <animated.div style={textSignUpAnimation} className={styles.mv2}>
           <Input
             errorString={confirmPasswordVerified}
@@ -178,13 +203,7 @@ const LoginForm = ({
         </animated.div>
       </div>
     );
-  }, [
-    confirmPasswordVerified,
-    emailVerified,
-    handleChange,
-    passwordVerified,
-    textSignUpAnimation,
-  ]);
+  }, [confirmPasswordVerified, emailVerified, handleChange, handleOnImageChange, image, loginForm, name, passwordVerified, textLoginAnimation, textSignUpAnimation]);
 
   const buttonSection = useCallback(() => {
     return (

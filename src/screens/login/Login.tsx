@@ -9,6 +9,7 @@ import { createUser, Type } from "../../database/user";
 import Spinner from "../../components/common/spinner";
 
 import LoginForm, { FormData } from "../../components/Login/loginForm";
+import { uploadImage } from "../../database/imageupload";
 
 const Login = (): JSX.Element => {
   const navigation = useNavigate();
@@ -17,9 +18,30 @@ const Login = (): JSX.Element => {
     password: "",
     confirmPassword: "",
     profileImage: "",
+    name: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [loginForm, setLoginForm] = useState<Type>(Type["LOGIN"]);
+  const [image, setImage] = useState<File | undefined | ArrayBuffer | null | string>(undefined);
+  const [imageFile, setImageFile] = useState<File | undefined>(undefined);
+  console.log('image', image)
+
+  const handleOnImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('e?.target', e?.target?.files)
+
+    const image = e?.target?.files && e?.target?.files[0];
+
+    if (image) {
+      const reader = new FileReader();
+      reader?.addEventListener('load', () => {
+        setImage(reader?.result);
+      });
+      reader.readAsDataURL(image);
+      setImageFile(image);
+    }
+
+  };
+
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e?.target;
@@ -34,19 +56,26 @@ const Login = (): JSX.Element => {
       e.preventDefault();
       setLoading(true);
       try {
-        const results = await createUser(
+        let url = '';
+        if (imageFile) {
+          url = await uploadImage(imageFile)
+          console.log('url', url);
+        }
+        await createUser(
           formData?.email,
           formData?.password,
-          loginForm
+          loginForm,
+          formData?.name,
+          url
         );
         setLoading(false);
-        navigation("/comments", { state: results });
+        navigation("/comments");
       } catch (error) {
         console.error(error);
         setLoading(false);
       }
     },
-    [formData?.email, formData?.password, loginForm, navigation]
+    [formData?.email, formData?.name, formData?.password, imageFile, loginForm, navigation]
   );
 
   return (
@@ -58,6 +87,8 @@ const Login = (): JSX.Element => {
           formData={formData}
           loginForm={loginForm}
           setLoginForm={setLoginForm}
+          handleOnImageChange={handleOnImageChange}
+          image={image}
         />
       )}
       {loading && <Spinner />}

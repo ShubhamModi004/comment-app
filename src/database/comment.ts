@@ -29,7 +29,9 @@ export const fetchComments = async (): Promise<commentType[]> => {
 
 export const addComment = async (
   name: string,
-  comment: string
+  comment: string,
+  profileImage:string,
+  id:string,
 ): Promise<boolean> => {
   try {
     await addDoc(commentCollection, {
@@ -38,6 +40,8 @@ export const addComment = async (
       name: name,
       repliedComment: [],
       date: new Date(),
+      profileImage:profileImage,
+      userId:id
     });
     return true;
   } catch (e) {
@@ -102,7 +106,9 @@ export const addReply = async (
   commentId: string,
   name: string,
   comment: string,
-  repliedComment: string[]
+  repliedComment: string[],
+  profileImage:string,
+  id:string,
 ): Promise<boolean> => {
   try {
     let ref = await addDoc(replyCollection, {
@@ -111,6 +117,8 @@ export const addReply = async (
       comment: comment,
       name: name,
       date: new Date(),
+      profileImage:profileImage,
+      userId:id
     });
     const docRef = doc(db, 'comments', commentId);
     await updateDoc(docRef, {

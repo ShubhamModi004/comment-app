@@ -24,19 +24,20 @@ import styles from "./styles.module.scss";
 import { Props } from "./types";
 import { commentType } from "../../../database/types";
 import { getAuth } from "firebase/auth";
+import Avatar, { AvatarSize } from "../../common/Avatar/Avatar";
 
 const Comment = ({
-  id,
-  name = "",
-  comment = "",
-  upvotes = [],
-  repliedComment = [],
+  commentData,
   showReplySection = true,
   upvote,
   key = "",
-  userName = "",
-  userId = "",
+  submitReply
 }: Props) => {
+  const { commentId,
+    name = "",
+    comment = "",
+    upvotes = [],
+    repliedComment = [], userId, profileImage } = commentData
   const [replyText, setReplyText] = useState<string>("");
   const [fetchedReplies, setFetchedReplies] = useState<commentType[]>([]);
   const [showReplies, setReplies] = useState<boolean>(false);
@@ -67,37 +68,38 @@ const Comment = ({
   const getReplies = useCallback(async () => {
     setLoading(true);
     try {
-      let replies = await fetchReplies(id);
+      let replies = await fetchReplies(commentId);
       setFetchedReplies(replies);
       setLoading(false);
     } catch (error) {
       console.error(error);
       setLoading(false);
     }
-  }, [id]);
+  }, [commentId]);
 
-  const submitReply = useCallback(async () => {
+
+
+  const submitAReply = useCallback(async () => {
     try {
-      await addReply(id, userName, replyText, repliedComment);
+      submitReply && submitReply(commentId, replyText, repliedComment)
       setReplyText("");
       await getReplies();
     } catch (error) {
       console.error(error);
     }
-  }, [getReplies, id, repliedComment, replyText, userName]);
+  }, [submitReply, commentId, replyText, repliedComment, getReplies]);
 
   const commentDelete = useCallback(async () => {
     if (deleteLoading) return;
     try {
       setDeleteLoading(true);
-      console.log("showReplySection", showReplySection);
-      await deleteEntry(id, showReplySection ? "comments" : "replies");
+      await deleteEntry(commentId, showReplySection ? "comments" : "replies");
       setDeleteLoading(false);
     } catch (error) {
       setDeleteLoading(false);
       console.error(error);
     }
-  }, [deleteLoading, id, showReplySection]);
+  }, [deleteLoading, commentId, showReplySection]);
 
   useEffect(() => {
     getReplies();
@@ -152,13 +154,13 @@ const Comment = ({
   ]);
 
   const onSave = useCallback(() => {
-    updateEntry(id, commentText, showReplySection ? "comments" : "replies");
-  }, [commentText, id, showReplySection]);
+    updateEntry(commentId, commentText, showReplySection ? "comments" : "replies");
+  }, [commentText, commentId, showReplySection]);
 
   const commentSection = useCallback(() => {
     return (
       <div className={styles["text_container_box"]}>
-        {auth?.currentUser?.email === name && (
+        {auth?.currentUser?.uid === userId && (
           <div onClick={commentDelete} className={styles["delete_comment"]}>
             {deleteLoading ? (
               <Spinner />
@@ -199,7 +201,7 @@ const Comment = ({
         )}
       </div>
     );
-  }, [auth?.currentUser?.email, comment, commentDelete, commentText, deleteLoading, handleCommentChange, name, onSave]);
+  }, [auth?.currentUser?.email, auth?.currentUser?.uid, comment, commentDelete, commentText, deleteLoading, handleCommentChange, name, onSave, userId]);
 
   const commentBox = useCallback(() => {
     return (
@@ -212,10 +214,7 @@ const Comment = ({
               return (
                 <Comment
                   key={comment?.commentId}
-                  name={comment?.name}
-                  comment={comment?.comment}
-                  upvotes={comment?.upvotes}
-                  id={comment?.commentId}
+                  commentData={comment}
                   upvote={() => {
                     submitUpvote(comment?.commentId, comment?.upvotes);
                   }}
@@ -223,33 +222,26 @@ const Comment = ({
                 />
               );
             })}
-            <InputAction
-              value={replyText}
-              handleChange={handleChange}
-              submit={submitReply}
-              loading={loading}
-            />
+            {submitReply && (
+              <InputAction
+                value={replyText}
+                handleChange={handleChange}
+                submit={submitAReply}
+                loading={loading}
+              />
+            )}
+
           </div>
         )}
       </div>
     );
-  }, [
-    actionItems,
-    commentSection,
-    fetchedReplies,
-    handleChange,
-    loading,
-    replyText,
-    showReplies,
-    submitReply,
-    submitUpvote,
-  ]);
+  }, [actionItems, commentSection, fetchedReplies, handleChange, loading, replyText, showReplies, submitAReply, submitReply, submitUpvote]);
 
   return (
     <div className={styles["container"]} key={key}>
       <div className={styles["image_container"]}>
         <div className={styles["image_container_image"]}>
-          <p>{name[0]}</p>
+          <Avatar source={profileImage} sizes={AvatarSize.SMALLER} />
         </div>
       </div>
       {commentBox()}

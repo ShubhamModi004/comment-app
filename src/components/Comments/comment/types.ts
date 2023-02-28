@@ -1,13 +1,10 @@
+import { commentType } from "../../../database/types";
+
 export interface Props {
-  id: string;
-  name: string;
-  comment: string;
-  upvotes: string[];
-  repliedComment?: string[];
+  commentData: commentType;
   showReplySection?: boolean;
   reply?: () => void;
   upvote?: () => void;
-  userName?: string;
-  userId?: string;
   key: string;
+  submitReply?:(commentId: string, replyText: string, repliedComment: string[])=>void;
 }
