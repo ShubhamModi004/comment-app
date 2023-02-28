@@ -25,6 +25,14 @@
       display: none;
     }
 
+    .comment_container{
+      width: 100%;
+
+      .comment{
+        width: 100%;
+      }
+    }
+
 
     @media screen and (max-width: $medium) {
       width: 100%;

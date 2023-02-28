@@ -199,15 +199,7 @@ const Comment = ({
         )}
       </div>
     );
-  }, [
-    auth?.currentUser?.email,
-    comment,
-    commentDelete,
-    commentText,
-    deleteLoading,
-    handleCommentChange,
-    name,
-  ]);
+  }, [auth?.currentUser?.email, comment, commentDelete, commentText, deleteLoading, handleCommentChange, name, onSave]);
 
   const commentBox = useCallback(() => {
     return (

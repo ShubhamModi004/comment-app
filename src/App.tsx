@@ -4,8 +4,11 @@ import { Route, Routes } from "react-router-dom";
 // components
 import Spinner from "./components/common/spinner";
 //screens
-const Login = React.lazy(() => import("./screens/login"));
-const CommentSection = React.lazy(() => import("./screens/commentSection"));
+// const Login = React.lazy(() => import("./screens/login"));
+// const CommentSection = React.lazy(() => import("./screens/commentSection"));
+
+import Login from "./screens/login/Login";
+import CommentSection from "./screens/commentSection/CommentSection";
 
 const App = () => {
   return (
