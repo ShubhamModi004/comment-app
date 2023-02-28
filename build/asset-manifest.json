@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/comment-app/static/css/main.0c522afc.css",
+    "main.js": "/comment-app/static/js/main.52a35949.js",
+    "static/media/logout.png": "/comment-app/static/media/logout.d0374bb9108b41d82c0a.png",
+    "index.html": "/comment-app/index.html",
+    "main.0c522afc.css.map": "/comment-app/static/css/main.0c522afc.css.map",
+    "main.52a35949.js.map": "/comment-app/static/js/main.52a35949.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0c522afc.css",
+    "static/js/main.52a35949.js"
+  ]
+}
