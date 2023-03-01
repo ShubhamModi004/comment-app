@@ -1,5 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 
+// firebase
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  where,
+} from "firebase/firestore";
+import { db } from "../../../config/firebase";
+
 // components
 import InputAction from "../../Comments/inputAction";
 import Spinner from "../../common/spinner";
@@ -7,7 +17,6 @@ import TextArea from "../../common/textArea";
 
 // apis
 import {
-  addReply,
   fetchReplies,
   upVoteReply,
   deleteEntry,
@@ -20,6 +29,9 @@ import classNames from "classnames";
 // styles
 import styles from "./styles.module.scss";
 
+// animatioms
+import { useSpring, animated } from "@react-spring/web";
+
 // types
 import { Props } from "./types";
 import { commentType } from "../../../database/types";
@@ -31,13 +43,17 @@ const Comment = ({
   showReplySection = true,
   upvote,
   key = "",
-  submitReply
+  submitReply,
 }: Props) => {
-  const { commentId,
+  const {
+    commentId,
     name = "",
     comment = "",
     upvotes = [],
-    repliedComment = [], userId, profileImage } = commentData
+    repliedComment = [],
+    userId,
+    profileImage,
+  } = commentData;
   const [replyText, setReplyText] = useState<string>("");
   const [fetchedReplies, setFetchedReplies] = useState<commentType[]>([]);
   const [showReplies, setReplies] = useState<boolean>(false);
@@ -46,6 +62,14 @@ const Comment = ({
   const auth = getAuth();
 
   const [commentText, setCommentText] = useState<string>("");
+
+  const [props] = useSpring(
+    () => ({
+      from: { opacity: 0, transform: "translateY(-40px)" },
+      to: { opacity: 1, transform: "translateY(0px)" },
+    }),
+    []
+  );
 
   const handleCommentChange = useCallback(
     (e: { target: { value: React.SetStateAction<string> } }) => {
@@ -77,17 +101,35 @@ const Comment = ({
     }
   }, [commentId]);
 
+  useEffect(() => {
+    getReplies();
+    const q = query(
+      collection(db, "replies"),
+      where("commentId", "==", commentId),
+      orderBy("date", "asc")
+    );
+    const unsubscribe: any = onSnapshot(q, (querySnapshot) => {
+      let tempcomments: commentType[] = [];
+      querySnapshot.forEach((doc) => {
+        tempcomments.push({
+          ...doc.data(),
+          commentId: doc.id,
+        } as unknown as commentType);
+      });
+      setFetchedReplies(tempcomments);
+    });
 
+    return () => unsubscribe();
+  }, [commentId, getReplies]);
 
   const submitAReply = useCallback(async () => {
     try {
-      submitReply && submitReply(commentId, replyText, repliedComment)
+      submitReply && submitReply(commentId, replyText, repliedComment);
       setReplyText("");
-      await getReplies();
     } catch (error) {
       console.error(error);
     }
-  }, [submitReply, commentId, replyText, repliedComment, getReplies]);
+  }, [submitReply, commentId, replyText, repliedComment]);
 
   const commentDelete = useCallback(async () => {
     if (deleteLoading) return;
@@ -101,10 +143,6 @@ const Comment = ({
     }
   }, [deleteLoading, commentId, showReplySection]);
 
-  useEffect(() => {
-    getReplies();
-  }, [getReplies]);
-
   const submitUpvote = useCallback(
     async (id: string, upvotes: string[]) => {
       let foundItem = upvotes.find((id) => id === userId);
@@ -113,9 +151,8 @@ const Comment = ({
         votes.push(userId);
         await upVoteReply(id, votes);
       }
-      getReplies();
     },
-    [getReplies, userId]
+    [userId]
   );
 
   const toggleReplies = useCallback(() => {
@@ -154,7 +191,11 @@ const Comment = ({
   ]);
 
   const onSave = useCallback(() => {
-    updateEntry(commentId, commentText, showReplySection ? "comments" : "replies");
+    updateEntry(
+      commentId,
+      commentText,
+      showReplySection ? "comments" : "replies"
+    );
   }, [commentText, commentId, showReplySection]);
 
   const commentSection = useCallback(() => {
@@ -179,7 +220,7 @@ const Comment = ({
           {name}
         </p>
 
-        {auth?.currentUser?.email === name ? (
+        {auth?.currentUser?.uid === userId ? (
           <TextArea
             handleChange={handleCommentChange}
             onSave={onSave}
@@ -187,7 +228,6 @@ const Comment = ({
             value={commentText}
             defaultValue={comment}
             maxCharacters={600}
-            disabled={auth?.currentUser?.email !== name}
           />
         ) : (
           <p
@@ -201,7 +241,17 @@ const Comment = ({
         )}
       </div>
     );
-  }, [auth?.currentUser?.email, auth?.currentUser?.uid, comment, commentDelete, commentText, deleteLoading, handleCommentChange, name, onSave, userId]);
+  }, [
+    auth?.currentUser?.uid,
+    comment,
+    commentDelete,
+    commentText,
+    deleteLoading,
+    handleCommentChange,
+    name,
+    onSave,
+    userId,
+  ]);
 
   const commentBox = useCallback(() => {
     return (
@@ -219,6 +269,7 @@ const Comment = ({
                     submitUpvote(comment?.commentId, comment?.upvotes);
                   }}
                   showReplySection={false}
+                  submitReply={submitAReply}
                 />
               );
             })}
@@ -230,22 +281,32 @@ const Comment = ({
                 loading={loading}
               />
             )}
-
           </div>
         )}
       </div>
     );
-  }, [actionItems, commentSection, fetchedReplies, handleChange, loading, replyText, showReplies, submitAReply, submitReply, submitUpvote]);
+  }, [
+    actionItems,
+    commentSection,
+    fetchedReplies,
+    handleChange,
+    loading,
+    replyText,
+    showReplies,
+    submitAReply,
+    submitReply,
+    submitUpvote,
+  ]);
 
   return (
-    <div className={styles["container"]} key={key}>
+    <animated.div style={props} className={styles["container"]} key={key}>
       <div className={styles["image_container"]}>
         <div className={styles["image_container_image"]}>
           <Avatar source={profileImage} sizes={AvatarSize.SMALLER} />
         </div>
       </div>
       {commentBox()}
-    </div>
+    </animated.div>
   );
 };
 

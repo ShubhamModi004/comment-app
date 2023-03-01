@@ -6,9 +6,15 @@ import styles from "./styles.module.scss";
 import Comment from "../../components/Comments/comment";
 import InputAction from "../../components/Comments/inputAction";
 import Navbar from "../../components/common/navbar";
+import Spinner from "../../components/common/spinner";
 
 // apis
-import { addComment, addReply, fetchComments, upVote } from "../../database/comment";
+import {
+  addComment,
+  addReply,
+  fetchComments,
+  upVote,
+} from "../../database/comment";
 
 // types
 import { commentType, userType } from "../../database/types";
@@ -18,6 +24,7 @@ import { getAuth, signOut } from "firebase/auth";
 
 import { db } from "../../config/firebase";
 import { getUserData } from "../../database/user";
+import classNames from "classnames";
 
 const CommentSection = (props: any): JSX.Element => {
   const navigation = useNavigate();
@@ -26,28 +33,27 @@ const CommentSection = (props: any): JSX.Element => {
 
   const [comment, setComment] = useState<string>("");
   const [comments, setComments] = useState<commentType[]>([]);
+  const [commentsLoading, setCommentLoading] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<userType | undefined>(undefined);
-
-
 
   const auth = getAuth();
 
   const fetchUser = useCallback(async (id: string) => {
     try {
       const result: userType = await getUserData(id);
-      console.log('result', result);
-      setUser(result)
+      setUser(result);
     } catch (error) {
-      console.log('error', error);
+      console.error("error", error);
     }
-
-  }, [])
+  }, []);
 
   useEffect(() => {
     try {
       setLoading(true);
-      if (auth.currentUser?.uid) { fetchUser(auth.currentUser?.uid) }
+      if (auth.currentUser?.uid) {
+        fetchUser(auth.currentUser?.uid);
+      }
       auth.currentUser?.email === "" && navigation("/");
       setLoading(false);
     } catch (error) {
@@ -55,8 +61,6 @@ const CommentSection = (props: any): JSX.Element => {
       navigation("/");
     }
   }, [auth.currentUser?.email, auth.currentUser?.uid, fetchUser, navigation]);
-
-
 
   const logout = useCallback(async () => {
     try {
@@ -73,7 +77,9 @@ const CommentSection = (props: any): JSX.Element => {
     try {
       let comments = await fetchComments();
       setComments(comments);
+      setCommentLoading(false);
     } catch (e) {
+      setCommentLoading(false);
       console.error(e);
     }
   }, []);
@@ -119,7 +125,12 @@ const CommentSection = (props: any): JSX.Element => {
   const submitComment = useCallback(async () => {
     setLoading(true);
     try {
-      await addComment(auth.currentUser?.email || '', comment, user?.profileImage || '', user?.id || '');
+      await addComment(
+        auth.currentUser?.email || "",
+        comment,
+        user?.profileImage || "",
+        user?.id || ""
+      );
       setComment("");
       setLoading(false);
     } catch (error) {
@@ -128,22 +139,32 @@ const CommentSection = (props: any): JSX.Element => {
     }
   }, [auth.currentUser?.email, comment, user?.id, user?.profileImage]);
 
-  const submitReply = useCallback(async (commentId: string, replyText: string, repliedComment: string[]) => {
-    try {
-      if (user) {
-        await addReply(commentId, user?.name, replyText, repliedComment, user?.profileImage, user?.id);
+  const submitReply = useCallback(
+    async (commentId: string, replyText: string, repliedComment: string[]) => {
+      try {
+        if (user) {
+          await addReply(
+            commentId,
+            user?.name,
+            replyText,
+            repliedComment,
+            user?.profileImage,
+            user?.id
+          );
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [user]);
+    },
+    [user]
+  );
 
   const submitUpvote = useCallback(
     async (id: string, upvotes: string[]) => {
-      let foundItem = upvotes.find((id) => id === auth.currentUser?.uid || '');
+      let foundItem = upvotes.find((id) => id === auth.currentUser?.uid || "");
       let votes = upvotes;
       if (!foundItem) {
-        votes.push(auth.currentUser?.uid || '');
+        votes.push(auth.currentUser?.uid || "");
         await upVote(id, votes);
       }
     },
@@ -172,7 +193,14 @@ const CommentSection = (props: any): JSX.Element => {
       <Navbar onLogout={logout} />
       <div className={styles["comment_section"]}>
         <div ref={messagesEndRef} className={styles["container"]}>
-          <div className={styles["comment_container"]}>{commentSection()}</div>
+          <div
+            className={classNames(
+              styles["comment_container"],
+              commentsLoading ? styles["comment_loader"] : ""
+            )}
+          >
+            {commentsLoading ? <Spinner /> : commentSection()}
+          </div>
         </div>
         <div className={styles["input_section"]}>
           <InputAction

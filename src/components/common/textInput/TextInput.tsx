@@ -27,7 +27,6 @@ const TextInput: React.FC<Props> = ({
 
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
-
       handleChange(e);
     },
     [handleChange]
@@ -73,7 +72,10 @@ const TextInput: React.FC<Props> = ({
         {loading ? (
           <Spinner />
         ) : (
-          <img src={require("../../../assets/images/send.png")} alt="send" />
+          <img
+            src={require("../../../assets/images/send_selected.png")}
+            alt="send"
+          />
         )}
       </div>
     </div>

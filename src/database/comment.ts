@@ -19,7 +19,7 @@ export const fetchComments = async (): Promise<commentType[]> => {
   try {
     const results = await getDocs(commentCollection);
     let comments = results.docs.map((doc) => {
-      return { ...doc.data(), commentId: doc?.id } as commentType 
+      return { ...doc.data(), commentId: doc?.id, y: 0 } as commentType 
     });
     return comments;
   } catch (e) {
@@ -61,6 +61,16 @@ export const deleteEntry = async (
         const replyRef = doc(db, 'replies', replyId);
         await deleteDoc(replyRef);
       })
+    } else {
+      const result = await getDoc(docRef);
+      const commentRef = doc(db, 'comments', result?.data()?.commentId)
+      if (commentRef) {
+        const commentResult = await getDoc(commentRef);
+        const repliedComment = commentResult?.data()?.repliedComment?.filter((item: string) => item !== id);
+        await updateDoc(commentRef, {
+          repliedComment: repliedComment,
+        });
+      }
     }
     await deleteDoc(docRef);
     return true;
@@ -75,12 +85,10 @@ export const updateEntry = async (
   type: string
 ): Promise<boolean> => {
   try {
-    console.log("type", type)
     const docRef = type === "comments" ? doc(db, 'comments', id) : doc(db, 'replies', id)
-    const result = await updateDoc(docRef, {
+    await updateDoc(docRef, {
       comment: comment,
     });
-    console.log("result", result)
     return true;
   } catch (e) {
     throw e;

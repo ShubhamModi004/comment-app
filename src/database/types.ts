@@ -7,6 +7,7 @@ export type commentType ={
   upvotes: string[];
   profileImage?:string;
   userId:string;
+  y?: number;
 }
 
 export interface userType{

@@ -18,7 +18,6 @@ export const createUser = async ( email: string, password: string, type: Type,na
         
       } else {
       const result =  await createUserWithEmailAndPassword(auth, email, password);
-      console.log('result?.user?.uid',result?.user?.uid)
          await addDoc(collection(db, 'users'), {
           name: name,
           email: email,

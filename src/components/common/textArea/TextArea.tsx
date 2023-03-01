@@ -5,6 +5,9 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 // styles
 import styles from "./styles.module.scss";
 
+// animatioms
+import { useSpring, animated } from "@react-spring/web";
+
 interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   defaultValue?: string | number;
   maxCharacters?: number;
@@ -29,11 +32,18 @@ const TextArea: React.FC<Props> = ({
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [focused, setFocused] = useState<boolean>(false);
 
+  const [animatedStyles] = useSpring(
+    () => ({
+      from: { opacity: 0, transform: "translateY(-40px)" },
+      to: { opacity: 1, transform: "translateY(0px)" },
+    }),
+    []
+  );
+
   const rows = Math.ceil(maxCharacters / 100);
 
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
-
       handleChange(e);
     },
     [handleChange]
@@ -64,7 +74,7 @@ const TextArea: React.FC<Props> = ({
         {...props}
       />
       {focused && (
-        <div className={styles["actions"]}>
+        <animated.div style={animatedStyles} className={styles["actions"]}>
           <div
             onClick={() => {
               onSave();
@@ -86,7 +96,7 @@ const TextArea: React.FC<Props> = ({
               alt="cancel"
             />
           </div>
-        </div>
+        </animated.div>
       )}
     </div>
   );

@@ -33,6 +33,10 @@
       }
     }
 
+    .comment_loader {
+      @include center;
+    }
+
 
     @media screen and (max-width: $medium) {
       width: 100%;

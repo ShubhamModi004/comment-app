@@ -7,6 +7,9 @@ import styles from "./styles.module.scss";
 // animations
 import { useSpring, animated } from "@react-spring/web";
 import { Type } from "../../../database/user";
+
+// components
+import Spinner from "../../common/spinner";
 import Input, { InputType } from "../../common/input";
 import Button from "../../common/button";
 import ImageUploader from "../../common/profileImage/profileImage";
@@ -28,6 +31,7 @@ export interface Props {
   setLoginForm: (loginForm: Type) => void;
   handleOnImageChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   image?: File | undefined | ArrayBuffer | null | string;
+  loading?: boolean;
 }
 
 const LoginForm = ({
@@ -37,7 +41,8 @@ const LoginForm = ({
   loginForm,
   setLoginForm,
   handleOnImageChange,
-  image
+  loading = false,
+  image,
 }: Props): JSX.Element => {
   const textLoginAnimation = useSpring({
     opacity: loginForm === Type["LOGIN"] ? 1 : 0,
@@ -68,10 +73,7 @@ const LoginForm = ({
   }, [formData?.email]);
 
   useEffect(() => {
-
-    return formData?.name !== ''
-      ? setName("")
-      : setName("Enter name");
+    return formData?.name !== "" ? setName("") : setName("Enter name");
   }, [formData?.name]);
 
   useEffect(() => {
@@ -156,25 +158,31 @@ const LoginForm = ({
     );
   }, [loginForm, setLoginForm, textLoginAnimation, textSignUpAnimation]);
 
-
-
   const inputSection = useCallback(() => {
     return (
       <div className={styles.mv1}>
         <animated.div style={textSignUpAnimation} className={styles.mv2}>
-          <ImageUploader imageUploading={false}
-            imageUrl={image} handleOnImageChange={handleOnImageChange} />
+          <ImageUploader
+            imageUploading={false}
+            imageUrl={image}
+            handleOnImageChange={handleOnImageChange}
+          />
         </animated.div>
         <animated.div style={textSignUpAnimation} className={styles.mv2}>
           <Input
             errorString={name}
             label="Name"
             handleChange={handleChange}
-            inputType={InputType['DEFAULT']}
+            inputType={InputType["DEFAULT"]}
             name="name"
           />
         </animated.div>
-        <animated.div style={loginForm === Type.LOGIN ? textLoginAnimation : textSignUpAnimation} className={styles.mv2}>
+        <animated.div
+          style={
+            loginForm === Type.LOGIN ? textLoginAnimation : textSignUpAnimation
+          }
+          className={styles.mv2}
+        >
           <Input
             errorString={emailVerified}
             label="Email"
@@ -183,7 +191,12 @@ const LoginForm = ({
             name="email"
           />
         </animated.div>
-        <animated.div style={loginForm === Type.LOGIN ? textLoginAnimation : textSignUpAnimation} className={styles.mv2}>
+        <animated.div
+          style={
+            loginForm === Type.LOGIN ? textLoginAnimation : textSignUpAnimation
+          }
+          className={styles.mv2}
+        >
           <Input
             errorString={passwordVerified}
             label="Password"
@@ -203,18 +216,35 @@ const LoginForm = ({
         </animated.div>
       </div>
     );
-  }, [confirmPasswordVerified, emailVerified, handleChange, handleOnImageChange, image, loginForm, name, passwordVerified, textLoginAnimation, textSignUpAnimation]);
+  }, [
+    confirmPasswordVerified,
+    emailVerified,
+    handleChange,
+    handleOnImageChange,
+    image,
+    loginForm,
+    name,
+    passwordVerified,
+    textLoginAnimation,
+    textSignUpAnimation,
+  ]);
 
   const buttonSection = useCallback(() => {
     return (
       <div className={styles["button_container"]}>
-        <Button disabled={disabled} type="submit">
-          <animated.span style={textLoginAnimation}>Login</animated.span>
-          <animated.span style={textSignUpAnimation}>Sign up</animated.span>
+        <Button disabled={disabled || loading} type="submit">
+          {loading ? (
+            <Spinner />
+          ) : (
+            <>
+              <animated.span style={textLoginAnimation}>Login</animated.span>
+              <animated.span style={textSignUpAnimation}>Sign up</animated.span>
+            </>
+          )}
         </Button>
       </div>
     );
-  }, [disabled, textLoginAnimation, textSignUpAnimation]);
+  }, [disabled, loading, textLoginAnimation, textSignUpAnimation]);
 
   return (
     <form onSubmit={handleSubmit} className={styles["form"]}>

@@ -1,11 +1,8 @@
-@import "../../../styles/common.scss";
-
-
+@import '../../../styles/common.scss';
 .container {
   position: relative;
   width: 100%;
   border: none;
-
   .text_area {
     position: relative;
     background: transparent !important;
@@ -22,17 +19,15 @@
     color: $black;
     transition: all 0.2s ease-in-out;
     margin: 0;
-    -ms-overflow-style: none;  
-    scrollbar-width: none;  
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     &::-webkit-scrollbar {
       display: none;
     }
   }
-
   &:focus {
     outline: none;
   }
-
   .actions {
     @include row;
     div {
@@ -45,5 +40,3 @@
     }
   }
 }
-
-

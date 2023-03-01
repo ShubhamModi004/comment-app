@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import styles from "./login.module.scss";
 //firebase
 import { createUser, Type } from "../../database/user";
-//components
-import Spinner from "../../components/common/spinner";
 
 import LoginForm, { FormData } from "../../components/Login/loginForm";
 import { uploadImage } from "../../database/imageupload";
@@ -22,26 +20,23 @@ const Login = (): JSX.Element => {
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [loginForm, setLoginForm] = useState<Type>(Type["LOGIN"]);
-  const [image, setImage] = useState<File | undefined | ArrayBuffer | null | string>(undefined);
+  const [image, setImage] =
+    useState<File | undefined | ArrayBuffer | null | string>(undefined);
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
-  console.log('image', image)
 
-  const handleOnImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('e?.target', e?.target?.files)
-
+  const handleOnImageChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const image = e?.target?.files && e?.target?.files[0];
-
     if (image) {
       const reader = new FileReader();
-      reader?.addEventListener('load', () => {
+      reader?.addEventListener("load", () => {
         setImage(reader?.result);
       });
       reader.readAsDataURL(image);
       setImageFile(image);
     }
-
   };
-
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e?.target;
@@ -56,10 +51,9 @@ const Login = (): JSX.Element => {
       e.preventDefault();
       setLoading(true);
       try {
-        let url = '';
+        let url = "";
         if (imageFile) {
-          url = await uploadImage(imageFile)
-          console.log('url', url);
+          url = await uploadImage(imageFile);
         }
         await createUser(
           formData?.email,
@@ -75,23 +69,28 @@ const Login = (): JSX.Element => {
         setLoading(false);
       }
     },
-    [formData?.email, formData?.name, formData?.password, imageFile, loginForm, navigation]
+    [
+      formData?.email,
+      formData?.name,
+      formData?.password,
+      imageFile,
+      loginForm,
+      navigation,
+    ]
   );
 
   return (
     <div className={styles["container"]}>
-      {!loading && (
-        <LoginForm
-          handleSubmit={handleSubmit}
-          handleChange={handleChange}
-          formData={formData}
-          loginForm={loginForm}
-          setLoginForm={setLoginForm}
-          handleOnImageChange={handleOnImageChange}
-          image={image}
-        />
-      )}
-      {loading && <Spinner />}
+      <LoginForm
+        handleSubmit={handleSubmit}
+        handleChange={handleChange}
+        formData={formData}
+        loginForm={loginForm}
+        setLoginForm={setLoginForm}
+        handleOnImageChange={handleOnImageChange}
+        image={image}
+        loading={loading}
+      />
     </div>
   );
 };

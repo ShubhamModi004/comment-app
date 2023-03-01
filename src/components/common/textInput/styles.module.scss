@@ -44,16 +44,21 @@
 
   .button_container {
     @include center;
+    display: flex !important;
     position: absolute;
     bottom: 0.5rem;
     right: 1rem;
+    background-color: $primary;
+    border-radius: 50%;
+    width: 2.2rem;
+    height: 2.2rem;
 
     div {
       margin-top: -0.5rem;
     }
 
     img {
-      width: 1.1rem;
+      width: 1rem;
     }
   }
 }
